@@ -1,0 +1,187 @@
+<html>
+
+    <head>
+        <title> Chat Box </title>
+        <h2 style="color: azure; background-color: dodgerblue; "> <center>Chat Box</center> </h2>
+        <script>
+            var name = prompt("Please enter your Name :");
+        </script>
+
+        <style>
+            
+            *{
+                margin: 5px;
+                padding: 0px;
+            }
+
+            body{
+                font-size: 20px;
+                background-color: silver;
+            }
+
+            #form{
+                padding: 5px;
+                position: fixed;
+                bottom: 5px;
+                width: 100%;
+            }
+
+            #form input
+            {
+                width: 66%;
+                background-color: azure;
+                padding: 10px;
+            }
+
+            #form button
+            {
+                width: 5%;
+                background-color: orangered;
+                padding: 10px;
+                color: #000;
+                border-radius: 10px;
+            }
+
+            #message{
+                list-style-type: none;
+            }
+
+            #messages li
+            {
+                padding: 5px 10px;
+                width: 100%;
+            }
+            
+            #CM
+            {
+                text-align: left;
+                background-color: orangered;
+                margin-left: 24%;
+                font-size: 20px;
+                line-height: 25px;
+                width: 62pc !important;            
+            }
+            #CL
+            {
+                text-align: left;
+                background-color: lime;
+                margin-left: 24%;
+                font-size: 20px;
+                line-height: 25px;
+                width: 62pc !important;           
+            }
+            #CE
+            {
+                text-align: left;
+                background-color: yellow;
+                margin-left: 24%;
+                font-size: 20px;
+                line-height: 25px;
+                width: 62pc !important;          
+            }
+            #receiverM{
+                text-align: left;
+                background-color: orangered;
+                font-size: 20px;
+                line-height: 25px;
+                width: 62pc !important;
+            }
+            #receiverL{
+                text-align: left;
+                background-color: lime;
+                font-size: 20px;
+                line-height: 25px;
+                width: 62pc !important;
+            }
+            #receiverE{
+                text-align: left;
+                background-color: yellow;
+                font-size: 20px;
+                line-height: 25px;
+                width: 62pc !important;
+            }
+            #receiver{
+                text-align: left;
+                background-color: dodgerblue;
+                font-size: 20px;
+                line-height: 25px;
+                width: 62pc !important;
+                color: azure;
+            }
+            
+            ul{
+                list-style-type: none;
+                
+            }
+
+
+        </style>
+
+
+    </head>
+
+    <body>
+
+        <ul id="messages"></ul>
+
+        <form id="form">
+            <input id="input" placeholder="Enter you text"/>
+            
+            <button type="submit" class = "normal" style="width: 8%;background-color: orangered;padding: 10px;color: #000;">Send</button>
+            <button type="submit" class = "location" style="width: 8%;background-color: lime;padding: 10px;color: #000;">Location</button>
+            <button type="submit" class = "emoji" style="width: 8%;background-color: yellow;padding: 10px;color: #000;">Emoji</button>
+        </form>
+
+    </body>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+        <script>
+
+        var socket = io();
+        socket.emit('joining msg', name);
+
+        //sending the message
+        $('.normal').click(function (e){
+            e.preventDefault;         
+            var message = $('#input').val();           
+            socket.emit("chat message", (name + " : " + message));
+            $('#messages').append($('<li id="CM">').text('You : ' + message));
+            $('#input').val("");
+            return false; //important
+        })
+        $('.location').click(function (e){
+            e.preventDefault;
+            var message = $('#input').val();
+            socket.emit("chat location", (name + " : " + message));
+            $('#messages').append($('<li id="CL">').text('Location : ' + message));
+            $('#input').val("");
+            return false; //important
+        })
+        $('.emoji').click(function (e){
+            e.preventDefault;
+            var message = $('#input').val();
+            socket.emit("chat emoji", (name + " : " + message));
+            $('#messages').append($('<li id="CE">').text('Emoji : '  + message));
+            $('#input').val("");
+            return false; //important
+        })
+        //getting the message
+        socket.on('chat message', function(msg){
+            $('#messages').append($('<li id="receiver">').text(msg));
+        });
+        socket.on('chat normal', function(msg){
+            $('#messages').append($('<li id="receiverM">').text(msg));
+        });
+        socket.on('chat location', function(msg){
+            $('#messages').append($('<li id="receiverL">').text(msg));
+        });
+        socket.on('chat emoji', function(msg){
+            $('#messages').append($('<li id="receiverE">').text(msg));
+        });
+
+
+        </script>
+
+</html>
